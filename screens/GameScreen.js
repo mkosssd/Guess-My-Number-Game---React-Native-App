@@ -1,14 +1,12 @@
-import { Alert, Button, StyleSheet, Text, View } from 'react-native'
-import Title from '../components/ui/title'
-import { useState, useEffect } from 'react'
+import { Feather, FontAwesome6 } from '@expo/vector-icons'
+import { useEffect, useState } from 'react'
+import { Alert, FlatList, StyleSheet, Text, View } from 'react-native'
 import NumberContainer from '../components/game/NumberContainer'
-import PrimaryButton from '../components/ui/primaryButton'
 import Card from '../components/ui/card'
-import Colors from '../utils/colors'
 import InstructionText from '../components/ui/instructionText'
-import { Ionicons } from '@expo/vector-icons'
-import { FontAwesome6 } from '@expo/vector-icons';
-import { Feather } from '@expo/vector-icons';
+import PrimaryButton from '../components/ui/primaryButton'
+import Title from '../components/ui/title'
+import Colors from '../utils/colors'
 const generateRandomBetween = (min, max, exclude) => {
   const rndNum = Math.floor(Math.random() * (max - min)) + min
 
@@ -21,16 +19,21 @@ const generateRandomBetween = (min, max, exclude) => {
 
 let minBoundary = 1
 let maxBoundary = 100
-
 const GameScreen = ({ userNumber, onGameOver }) => {
   const initialGuess = generateRandomBetween(1, 100, userNumber)
   const [currentGuess, setCurrentGuess] = useState(initialGuess)
+  const [guessedNumLogs, setGuessedNumLogs] = useState([initialGuess])
 
   useEffect(() => {
     if (userNumber === currentGuess) {
-      onGameOver()
+      onGameOver(guessedNumLogs.length)
     }
   }, [currentGuess, userNumber, onGameOver])
+
+  useEffect(() => {
+    minBoundary = 1
+    maxBoundary = 100
+  }, [])
 
   const nextGuessHandler = direction => {
     if (
@@ -55,6 +58,7 @@ const GameScreen = ({ userNumber, onGameOver }) => {
       currentGuess
     )
     setCurrentGuess(rndNumber)
+    setGuessedNumLogs(guessLog => [rndNumber, ...guessedNumLogs])
   }
 
   return (
@@ -70,16 +74,28 @@ const GameScreen = ({ userNumber, onGameOver }) => {
         <Card>
           <View style={styles.buttonContainer}>
             <PrimaryButton onPress={nextGuessHandler.bind(this, 'higher')}>
-              <Feather name="plus" size={24} color="black" />
+              <Feather name='plus' size={24} color='black' />
             </PrimaryButton>
             <PrimaryButton onPress={nextGuessHandler.bind(this, 'lower')}>
-              <FontAwesome6 name="minus" size={24} color="black" />
+              <FontAwesome6 name='minus' size={24} color='black' />
             </PrimaryButton>
           </View>
         </Card>
         {/* + - */}
       </View>
-      <InstructionText>LOG ROUND</InstructionText>
+      <InstructionText style={{ marginBottom: 10 }}>
+        GUESSED LOGS
+      </InstructionText>
+      <View style={styles.listContainer}>
+        <FlatList
+          contentContainerStyle={{ alignItems: 'center' }}
+          data={guessedNumLogs}
+          renderItem={itemData => (
+            <Text style={styles.guessLogText}>{itemData.item}</Text>
+          )}
+          keyExtractor={item => item}
+        />
+      </View>
     </View>
   )
 }
@@ -96,5 +112,19 @@ const styles = StyleSheet.create({
   },
   numberCardContainer: {
     marginVertical: 15
+  },
+  guessLogText: {
+    color: Colors.allOverSecondary,
+    fontFamily: 'open-sans-bold',
+    fontSize: 17,
+    backgroundColor: Colors.allOverPrimary,
+    padding: 8,
+    textAlign: 'center',
+    marginVertical: 2,
+    borderRadius: 20
+  },
+  listContainer: {
+    flex: 1,
+    padding: 20
   }
 })

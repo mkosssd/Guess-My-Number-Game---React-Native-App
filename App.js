@@ -5,30 +5,58 @@ import { useState } from 'react'
 import GameScreen from './screens/GameScreen'
 import GameOver from './screens/GameOver'
 import Colors from './utils/colors'
-import {useFonts} from 'expo-font'  
-import AppLoading from 'expo-app-loading'
+import { useFonts } from 'expo-font'
+import * as SplashScreen from 'expo-splash-screen'
+
 export default function App () {
   const [userNumber, setUserNumber] = useState()
-  const [isGameOver, setGameOver] = useState(false)
-
- =useFonts({
-  'open-sans' : require('./assets/fonts/OpenSans-Regular.ttf'),
-  'open-sans-bold' : require('./assets/fonts/OpenSans-Bold.ttf')
-})
-
+  const [isGameOver, setGameOver] = useState(true)
+  const [guessRounds, setGuessRounds] = useState(0)
+  SplashScreen.preventAutoHideAsync()
+    .then(result =>
+      console.log(`SplashScreen.preventAutoHideAsync() succeeded: ${result}`)
+    )
+    .catch(console.warn)
+  const [fontsLoaded] = useFonts({
+    'open-sans': require('./assets/fonts/OpenSans-Regular.ttf'),
+    'open-sans-bold': require('./assets/fonts/OpenSans-Bold.ttf')
+  })
+  if (fontsLoaded) {
+    setTimeout(async () => {
+      SplashScreen.hideAsync()
+    }, 2000)
+  }
   const startGameHandler = pickedNumber => {
     setUserNumber(pickedNumber)
     setGameOver(false)
   }
-  const onGameOver = () => {
+  const onGameOver = (count) => {
     setGameOver(true)
+    setGuessRounds(count)
+  }
+  const playAgainHandler = () => {
+    setUserNumber()
+    setGameOver(true)
+    setGuessRounds(0)
   }
   let screen = <StartGameScreen startGameHandler={startGameHandler} />
   if (userNumber) {
-    screen = <GameScreen userNumber={userNumber} onGameOver={onGameOver} />
+    screen = (
+      <GameScreen
+        userNumber={userNumber}
+        onGameOver={onGameOver}
+      />
+    )
   }
+
   if (isGameOver && userNumber) {
-    screen = <GameOver></GameOver>
+    screen = (
+      <GameOver
+        userNumber={userNumber}
+        totalRounds={guessRounds}
+        playAgain={playAgainHandler}
+      />
+    )
   }
   return (
     <LinearGradient
