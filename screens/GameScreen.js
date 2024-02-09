@@ -6,7 +6,9 @@ import PrimaryButton from '../components/ui/primaryButton'
 import Card from '../components/ui/card'
 import Colors from '../utils/colors'
 import InstructionText from '../components/ui/instructionText'
-
+import { Ionicons } from '@expo/vector-icons'
+import { FontAwesome6 } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 const generateRandomBetween = (min, max, exclude) => {
   const rndNum = Math.floor(Math.random() * (max - min)) + min
 
@@ -68,10 +70,10 @@ const GameScreen = ({ userNumber, onGameOver }) => {
         <Card>
           <View style={styles.buttonContainer}>
             <PrimaryButton onPress={nextGuessHandler.bind(this, 'higher')}>
-              +
+              <Feather name="plus" size={24} color="black" />
             </PrimaryButton>
             <PrimaryButton onPress={nextGuessHandler.bind(this, 'lower')}>
-              -
+              <FontAwesome6 name="minus" size={24} color="black" />
             </PrimaryButton>
           </View>
         </Card>

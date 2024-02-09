@@ -28,7 +28,7 @@ const StartGameScreen = props => {
   return (
     <View style={styles.container}>
       <Title>Enter A Number</Title>
-      <Card>
+      <Card style={{borderWidth:3, borderColor: Colors.allOverSecondary, borderRadius: 5}}>
         <TextInput
           style={styles.numberInput}
           value={enteredNumber}
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     backgroundColor: '#444',
     fontWeight: '900',
-    borderBottomWidth: 3,
+    borderWidth: 3,
     borderRadius: 10,
     marginVertical: 10,
     borderColor: Colors.allOverSecondary,
