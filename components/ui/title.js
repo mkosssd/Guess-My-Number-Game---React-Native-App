@@ -16,6 +16,8 @@ const styles = StyleSheet.create({
     padding: 10,
     borderWidth: 1,
     backgroundColor: 'black',
-    borderRadius: 10
+    borderRadius: 10,
+    maxWidth: '80%',
+    width: 300,
   }
 })

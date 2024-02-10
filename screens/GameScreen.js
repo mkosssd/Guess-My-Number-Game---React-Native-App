@@ -1,6 +1,13 @@
 import { Feather, FontAwesome6 } from '@expo/vector-icons'
 import { useEffect, useState } from 'react'
-import { Alert, FlatList, StyleSheet, Text, View } from 'react-native'
+import {
+  Alert,
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+  useWindowDimensions
+} from 'react-native'
 import NumberContainer from '../components/game/NumberContainer'
 import Card from '../components/ui/card'
 import InstructionText from '../components/ui/instructionText'
@@ -61,9 +68,9 @@ const GameScreen = ({ userNumber, onGameOver }) => {
     setGuessedNumLogs(guessLog => [rndNumber, ...guessedNumLogs])
   }
 
-  return (
-    <View style={styles.container}>
-      <Title>Opponent's Guess</Title>
+  const { width } = useWindowDimensions()
+  let content = (
+    <>
       <View style={styles.numberCardContainer}>
         <Card>
           <NumberContainer>{currentGuess}</NumberContainer>
@@ -81,21 +88,59 @@ const GameScreen = ({ userNumber, onGameOver }) => {
             </PrimaryButton>
           </View>
         </Card>
-        {/* + - */}
-      </View>
-      <InstructionText style={{ marginBottom: 10 }}>
+		<InstructionText style={{ marginBottom: 10 }}>
         GUESSED LOGS
       </InstructionText>
-      <View style={styles.listContainer}>
+        {/* + - */}
+      </View>
+    </>
+  )
+  if (width > 500) {
+    content = (
+      <>
+        <View style={styles.numberCardContainer}>
+          <Card
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-around',
+              padding: 25
+            }}
+          >
+            <PrimaryButton
+              style={{ width: '25%' }}
+              onPress={nextGuessHandler.bind(this, 'higher')}
+            >
+              <Feather name='plus' size={24} color='black' />
+            </PrimaryButton>
+            <NumberContainer style={{ width: '25%' }}>{currentGuess}</NumberContainer>
+            <PrimaryButton
+              style={{ width: '25%' }}
+              onPress={nextGuessHandler.bind(this, 'lower')}
+            >
+              <FontAwesome6 name='minus' size={24} color='black' />
+            </PrimaryButton>
+          </Card>
+        </View>
+		<View style={styles.listContainer}>
         <FlatList
-          contentContainerStyle={{ alignItems: 'center' }}
+          contentContainerStyle={[{ alignItems: 'center', flexDirection:'row' }]}
           data={guessedNumLogs}
           renderItem={itemData => (
-            <Text style={styles.guessLogText}>{itemData.item}</Text>
+            <Text style={[styles.guessLogText,{marginHorizontal: 3}]}>{itemData.item}</Text>
           )}
-          keyExtractor={item => item}
+          keyExtractor={(item,index) => index}
         />
       </View>
+      </>
+    )
+  }
+  return (
+    <View style={styles.container}>
+      <Title>Opponent's Guess</Title>
+
+      {content}
+      
+      
     </View>
   )
 }
@@ -105,7 +150,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    marginTop: 25
+    marginTop: 25,
+	alignItems:'center'
   },
   buttonContainer: {
     flexDirection: 'row'
@@ -118,8 +164,10 @@ const styles = StyleSheet.create({
     fontFamily: 'open-sans-bold',
     fontSize: 17,
     backgroundColor: Colors.allOverPrimary,
-    padding: 8,
+	width:35,
+	height:35,
     textAlign: 'center',
+	verticalAlign:'middle',
     marginVertical: 2,
     borderRadius: 20
   },
