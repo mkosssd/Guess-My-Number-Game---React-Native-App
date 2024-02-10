@@ -35,8 +35,7 @@ const StartGameScreen = props => {
           onChangeText={numberInputHandler}
           maxLength={2}
           cursorColor={Colors.allOverSecondary}
-          keyboardType={'number-pad'}
-          autoFocus={true}
+          keyboardType={'numeric'}
           caretHidden={false}
         />
         <View style={styles.buttonContainer}>

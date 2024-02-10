@@ -8,9 +8,9 @@
     "userInterfaceStyle": "light",
     "backgroundColor": "#eeeeee",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/images/question-mark.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#000000"
     },
     "assetBundlePatterns": [
       "**/*"
